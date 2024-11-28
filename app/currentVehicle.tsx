@@ -8,7 +8,7 @@ import data from '@/server/db.json'
 type Data = {
   name: string,
   logo: string,
-  price: string,
+  price: number,
   carType: string,
   carModel: string,
   carPass: string,
@@ -29,7 +29,7 @@ const CurrentVehicle = () => {
                     <Image source={item.logo as any} alt={item.name} style={styles.vehicleImage} resizeMode="contain"/>
                     <View style={styles.vehiclePricingView}>
                         <Text style={styles.vehicleName}>{item.name}</Text>
-                        <Text style={{color: "green",textAlign:"right", margin: 10,marginHorizontal: 20}}>{item.price}</Text>
+                        <Text style={{color: "green",textAlign:"right", margin: 10,marginHorizontal: 20}}>Ksh {item.price} / day</Text>
                     </View>
                 </View>
                 <View style={styles.vehicleData}>

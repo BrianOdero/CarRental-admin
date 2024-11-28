@@ -2,7 +2,7 @@
     {
       "name": "Peugeot 207",
       "logo": "@/vehicleImages/peugeot207.jpeg",
-      "price": "$ 100 / day",
+      "price": 100,
       "carType": "car-sport-outline",
       "carModel": "hatchback",
       "carPass": "4 Pass",
@@ -13,7 +13,7 @@
     {
       "name": "Peugeot 208",
       "logo": "@/vehicleImages/peugeot207.jpeg",
-      "price": "$ 100 / day",
+      "price": 100,
       "carType": "car-sport-outline",
       "carModel": "hatchback",
       "carPass": "4 Pass",

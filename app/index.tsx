@@ -46,7 +46,7 @@ export default function Index() {
         <Text style={styles.headerText}>WELCOME ADMIN</Text>
       </View>
       <View style={styles.bodySec}>
-        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", marginTop: 30 }}>CHOOSE WHERE YOU WANT TO EDIT</Text>
+        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", marginTop: 30 }}>CHOOSE WHAT YOU WANT TO EDIT</Text>
         <View style={styles.menuContainer}>
            {pages.map((page) => (
              <MenuItem key={page.id} icon={page.icon} title={page.title} route={page.route} id={page.id} />
