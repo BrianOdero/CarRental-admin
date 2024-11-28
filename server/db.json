@@ -1,0 +1,25 @@
+[
+    {
+      "name": "Peugeot 207",
+      "logo": "@/vehicleImages/peugeot207.jpeg",
+      "price": "$ 100 / day",
+      "carType": "car-sport-outline",
+      "carModel": "hatchback",
+      "carPass": "4 Pass",
+      "personLogo": "person-outline",
+      "topSpeed": "180km/h",
+      "showroom": "Kai and Karo"
+    },
+    {
+      "name": "Peugeot 208",
+      "logo": "@/vehicleImages/peugeot207.jpeg",
+      "price": "$ 100 / day",
+      "carType": "car-sport-outline",
+      "carModel": "hatchback",
+      "carPass": "4 Pass",
+      "personLogo": "person-outline",
+      "topSpeed": "160km/h",
+      "showroom": "Lanchaster Car Shop"
+    }
+  ]
+  

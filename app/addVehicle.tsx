@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
   Dimensions,
+  TextInput,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Picker } from '@react-native-picker/picker';
@@ -30,66 +31,79 @@ export default function EnquiryScreen() {
           <Text style={styles.title}>Add Your Desired Vehicle</Text>
           
           <View style={styles.illustrationContainer}>
-            <SvgUri
+            {/* <SvgUri
               width={width * 0.8}
               height={200}
               uri="https://your-illustration-url.svg"
-            />
+            /> */}
           </View>
 
           <View style={styles.card}>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Enter Name</Text>
               <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={country}
-                  onValueChange={(value) => setCountry(value)}
-                  style={styles.picker}
-                >
-                  <Picker.Item label="Select Country" value="" />
-                  {/* Add country options here */}
-                </Picker>
+                <TextInput style={[styles.picker,{marginTop:10}]} placeholder="Enter Name"/>
               </View>
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Select State</Text>
+              <Text style={styles.label}>Choose Vehicle Brand</Text>
               <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={state}
                   onValueChange={(value) => setState(value)}
                   style={styles.picker}
                 >
-                  <Picker.Item label="Select State" value="" />
+                  <Picker.Item label="Toyota" value="Toyota" />
+                  <Picker.Item label="Honda" value="Honda" />
+                  <Picker.Item label="Mitsubishi" value="Mitsubishi" />
+                  <Picker.Item label="Peugeot" value="Peugeot" />
                   {/* Add state options here */}
                 </Picker>
               </View>
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Select District</Text>
+              <Text style={styles.label}>Choose Top Speed</Text>
               <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={district}
                   onValueChange={(value) => setDistrict(value)}
                   style={styles.picker}
                 >
-                  <Picker.Item label="Select District" value="" />
-                  {/* Add district options here */}
+                  <Picker.Item label="180 KM / HR" value="180" />
+                  <Picker.Item label="200 KM / HR" value="200" />
+                  <Picker.Item label="220 KM / HR" value="220" />
+                 
                 </Picker>
               </View>
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Centre Name</Text>
+              <Text style={styles.label}>Set Vehicle Type</Text>
               <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={centre}
                   onValueChange={(value) => setCentre(value)}
                   style={styles.picker}
                 >
-                  <Picker.Item label="Select Centre" value="" />
-                  {/* Add centre options here */}
+                  <Picker.Item label="HatchBack" value="" />
+                  <Picker.Item label="Saloon" value="" />
+                  <Picker.Item label="SUV" value="" />
+                </Picker>
+              </View>
+            </View>
+
+             <View style={styles.inputContainer}>
+              <Text style={styles.label}>Set Preferred Showroom</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={centre}
+                  onValueChange={(value) => setCentre(value)}
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Kai and Karo" value="" />
+                  <Picker.Item label="Lanchaster Motors" value="" />
                 </Picker>
               </View>
             </View>
@@ -145,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontSize: 12,
+    fontSize: 16,
     color: '#00cccc',
     marginBottom: 5,
   },
@@ -155,7 +169,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     marginTop: -10,
-    marginBottom: -10,
+  
   },
   button: {
     backgroundColor: '#0066ff',
