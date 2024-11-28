@@ -21,6 +21,10 @@ export default function EnquiryScreen() {
   const [district, setDistrict] = useState('');
   const [centre, setCentre] = useState('');
 
+
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient
@@ -42,7 +46,11 @@ export default function EnquiryScreen() {
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Enter Name</Text>
               <View style={styles.pickerContainer}>
-                <TextInput style={[styles.picker,{marginTop:10}]} placeholder="Enter Name"/>
+                <TextInput 
+                  style={[styles.picker,{marginTop:5,paddingLeft: 10}]} 
+                  placeholder="Enter Name"
+                  value={name}
+                  onChangeText={text => setName(text)}/>
               </View>
             </View>
 
@@ -107,6 +115,15 @@ export default function EnquiryScreen() {
                 </Picker>
               </View>
             </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Set Price</Text>
+              <View style={styles.pickerContainer}>
+                <TextInput style={[styles.picker,{paddingLeft: 16}]} placeholder="Set Desired Price"/>
+              </View>
+            </View>
+
+            
 
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>ADD VEHICLE</Text>
