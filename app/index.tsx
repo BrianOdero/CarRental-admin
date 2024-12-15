@@ -27,14 +27,16 @@ export default function Index() {
 
 
 
+
+
   //rendering the page links 
  const MenuItem: ({ icon, title, route }: MenuItem) => JSX.Element = ({ icon, title, route }) =>(
     <TouchableOpacity style={styles.menuItem} onPress={() => router.push(route)}>
       <View style={styles.menuItemContent}>
-        <Ionicons name={icon as any} size={24} color="blue" style={styles.menuIcon} />
+        <Ionicons name={icon as any} size={24} color="#0066ff" style={styles.menuIcon} />
         <Text style={styles.menuText}>{title}</Text>
       </View>
-      <Ionicons name="chevron-forward" size={24} color="#9CA3AF" />
+      <Ionicons name="chevron-forward" size={24} color="#9CA3AF"/>
     </TouchableOpacity>
   );
 
@@ -62,7 +64,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'darkblue',
+    backgroundColor: '#0066ff',
   },
   headerSec:{
     flex:1,

@@ -8,22 +8,63 @@ import {
   ScrollView,
   Dimensions,
   TextInput,
+  Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Picker } from '@react-native-picker/picker';
 import { SvgUri } from 'react-native-svg';
+import supabase from '@/DBconfig/supabaseClient';
 
 const { width } = Dimensions.get('window');
 
 export default function EnquiryScreen() {
-  const [country, setCountry] = useState('');
-  const [state, setState] = useState('');
-  const [district, setDistrict] = useState('');
-  const [centre, setCentre] = useState('');
 
-
-  const [name, setName] = useState('');
+  // states for input variables
+  const [name, setName] = useState<string>('');
   const [price, setPrice] = useState('');
+  const [brand, setBrand] = useState('');
+  const [topSpeed, setTopSpeed] = useState('');
+  const [carType, setCarType] = useState('');
+  const [carModel, setCarModel] = useState('');
+  const [passCapacity, setPassCapacity] = useState('');
+  const [personLogo, setPersonLogo] = useState('person-outline');
+  const [showroom, setShowroom] = useState('');
+
+
+  //INSERT FUNCTION TO SUPABASE and REMAINING TO INSERT VEHICLE LOGO
+  const insertVehicle = async () => {
+    const {data,error} = await supabase
+    .from('Vehicle')
+    .insert([
+      { 
+        name: name, 
+        price: price, 
+        carBrand: brand, 
+        topSpeed: topSpeed, 
+        carType: carType, 
+        carModel: carModel, 
+        carPass: passCapacity, 
+        personLogo: personLogo, 
+        showroom: showroom 
+      },
+    ])
+    .select()  
+
+    if(error) Alert.alert(error.message)
+    
+      if(data){
+        Alert.alert('Vehicle Added Successfully')
+        setName('')
+        setPrice('')
+        setBrand('')
+        setTopSpeed('')
+        setCarType('')
+        setCarModel('')
+        setPassCapacity('')
+        setPersonLogo('person-outline')
+        setShowroom('')
+      }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -34,14 +75,6 @@ export default function EnquiryScreen() {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <Text style={styles.title}>Add Your Desired Vehicle</Text>
           
-          <View style={styles.illustrationContainer}>
-            {/* <SvgUri
-              width={width * 0.8}
-              height={200}
-              uri="https://your-illustration-url.svg"
-            /> */}
-          </View>
-
           <View style={styles.card}>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Enter Name</Text>
@@ -58,8 +91,8 @@ export default function EnquiryScreen() {
               <Text style={styles.label}>Choose Vehicle Brand</Text>
               <View style={styles.pickerContainer}>
                 <Picker
-                  selectedValue={state}
-                  onValueChange={(value) => setState(value)}
+                  selectedValue={brand}
+                  onValueChange={(value) => setBrand(value)}
                   style={styles.picker}
                 >
                   <Picker.Item label="Toyota" value="Toyota" />
@@ -75,8 +108,8 @@ export default function EnquiryScreen() {
               <Text style={styles.label}>Choose Top Speed</Text>
               <View style={styles.pickerContainer}>
                 <Picker
-                  selectedValue={district}
-                  onValueChange={(value) => setDistrict(value)}
+                  selectedValue={topSpeed}
+                  onValueChange={(value) => setTopSpeed(value)}
                   style={styles.picker}
                 >
                   <Picker.Item label="180 KM / HR" value="180" />
@@ -91,13 +124,28 @@ export default function EnquiryScreen() {
               <Text style={styles.label}>Set Vehicle Type</Text>
               <View style={styles.pickerContainer}>
                 <Picker
-                  selectedValue={centre}
-                  onValueChange={(value) => setCentre(value)}
+                  selectedValue={carType}
+                  onValueChange={(value) => setCarType(value)}
                   style={styles.picker}
                 >
-                  <Picker.Item label="HatchBack" value="" />
-                  <Picker.Item label="Saloon" value="" />
-                  <Picker.Item label="SUV" value="" />
+                  <Picker.Item label="HatchBack" value="Hatchback" />
+                  <Picker.Item label="Saloon" value="Saloon" />
+                  <Picker.Item label="SUV" value="SUV" />
+                </Picker>
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Set Vehicle Passenger Capacity</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={passCapacity}
+                  onValueChange={(value) => setPassCapacity(value)}
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Four Passengers" value="4" />
+                  <Picker.Item label="Five Passengers" value="5" />
+                  <Picker.Item label="Seven Passengers" value="7" />
                 </Picker>
               </View>
             </View>
@@ -106,12 +154,12 @@ export default function EnquiryScreen() {
               <Text style={styles.label}>Set Preferred Showroom</Text>
               <View style={styles.pickerContainer}>
                 <Picker
-                  selectedValue={centre}
-                  onValueChange={(value) => setCentre(value)}
+                  selectedValue={showroom}
+                  onValueChange={(value) => setShowroom(value)}
                   style={styles.picker}
                 >
-                  <Picker.Item label="Kai and Karo" value="" />
-                  <Picker.Item label="Lanchaster Motors" value="" />
+                  <Picker.Item label="Kai and Karo" value="Kai and Karo" />
+                  <Picker.Item label="Lanchaster Motors" value="Lanchaster Car Shop" />
                 </Picker>
               </View>
             </View>
@@ -119,13 +167,18 @@ export default function EnquiryScreen() {
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Set Price</Text>
               <View style={styles.pickerContainer}>
-                <TextInput style={[styles.picker,{paddingLeft: 16}]} placeholder="Set Desired Price"/>
+                <TextInput 
+                  style={[styles.picker,{paddingLeft: 16}]} 
+                  placeholder="Set Desired Price"
+                  value={price}
+                  onChangeText={text => setPrice(text)}
+                  />
               </View>
             </View>
 
             
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={insertVehicle}>
               <Text style={styles.buttonText}>ADD VEHICLE</Text>
             </TouchableOpacity>
 
