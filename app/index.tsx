@@ -1,129 +1,178 @@
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import LottieView from 'lottie-react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Alert, Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import LottieView from 'lottie-react-native'
+import { useState } from "react";
+import supabase from "@/DBconfig/supabaseClient";
 import { useRouter } from "expo-router";
-
-
 export default function Index() {
 
 
-  const pages = [
-    {id: 1,  icon: "car-outline" ,title: "Add Vehicles ", route: "addVehicle"},
-    {id: 2,  icon: "clipboard-outline" ,title: "See Logs", route: "seeLogs"},
-    {id: 3,  icon: "car" ,title: "See Available Cars", route: "currentVehicle"},
-  ]
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter()
 
 
-  type MenuItem = {
-    id: number,
-    icon: string,
-    title: string,
-    route: any
+  const logInsert = async () => {
+    const {data,error} = await supabase
+    .from('loginLogs')
+    .insert({
+      user_email: email
+    })
+    .select()
+    .single()
+
+
+    if(data) console.log('User data inserted into loginLogs:', data)
+    if(error) console.log(error)
+
   }
 
 
 
+  const login = async () => {
+    setLoading(true);
+    const {error} = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+    if (error){
+      Alert.alert(error.message)
+      setEmail("")
+      setPassword("")
+      setLoading(false)
+    }else{
+      Alert.alert("Login Successful")
+      logInsert()
+      setEmail("")
+      setPassword("")
+      setLoading(false)
+      router.replace('/(auth)')
+      
+    }
+  }
 
-
-
-
-  //rendering the page links 
- const MenuItem: ({ icon, title, route }: MenuItem) => JSX.Element = ({ icon, title, route }) =>(
-    <TouchableOpacity style={styles.menuItem} onPress={() => router.push(route)}>
-      <View style={styles.menuItemContent}>
-        <Ionicons name={icon as any} size={24} color="#0066ff" style={styles.menuIcon} />
-        <Text style={styles.menuText}>{title}</Text>
-      </View>
-      <Ionicons name="chevron-forward" size={24} color="#9CA3AF"/>
-    </TouchableOpacity>
-  );
+  const signup = async () => {
+    setLoading(true);
+    const {error} = await supabase.auth.signUp({
+      email,
+      password
+    })
+    if(error){
+      Alert.alert(error.message)
+      setEmail("")
+      setPassword("")
+      setLoading(false)
+    }else if(password !== confirmPassword){
+      Alert.alert("Passwords do not match")
+      setPassword("")
+      setConfirmPassword("")
+      setLoading(false)
+    }
+    else{
+      Alert.alert("Signup Successful")
+      setEmail("")
+      setPassword("")
+      setLoading(false)
+      setIsLogin(true)
+    }
+  }
+  if (loading) return (
+    <View>
+      <LottieView source={require("../assets/images/loadingAnimation.json")} autoPlay loop style={{width:"auto", height: 250, marginVertical: 5}} />
+    </View>
+  )
 
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerSec}>
-        <LottieView style={styles.lottieImage} source={require("../animations/hello.json")} autoPlay loop />
-        <Text style={styles.headerText}>WELCOME ADMIN</Text>
-      </View>
-      <View style={styles.bodySec}>
-        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", marginTop: 30 }}>CHOOSE WHAT YOU WANT TO EDIT</Text>
-        <View style={styles.menuContainer}>
-           {pages.map((page) => (
-             <MenuItem key={page.id} icon={page.icon} title={page.title} route={page.route} id={page.id} />
-           ))}
-          </View>
+    
+    <View style={styles.containor}>
+      <LottieView 
+        source={isLogin ? require("../assets/images/loginAnimation.json") : require("../assets/images/signupAnimation.json")} 
+        autoPlay 
+        loop
+        style={{width:"auto", height: 250, marginVertical: 5}} />
+      <Text style={styles.headerText}>{isLogin ? "LOGIN" : "SIGN UP"}</Text>
+      <Text style={{fontSize: 20,margin: 10,textAlign: "center"}}>{isLogin ? "Login to your account" : "Create a new account"}</Text>
+      <TextInput
+        placeholder="Enter Email"
+        value={email}
+        onChangeText={setEmail}
+        style={styles.textInput}
+        />
+      
+        <TextInput
+          placeholder="Enter Password"
+          value={password}
+          onChangeText={setPassword}
+          style={styles.textInput}
+          secureTextEntry={!showPassword}
+        />
+        {!isLogin && (
+           <TextInput
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            style={styles.textInput}
+            secureTextEntry={!showPassword}
+        />
+        )}
         
-      </View>
-    </SafeAreaView>
+        <TouchableOpacity onPress={isLogin ? login : signup}>
+          <View style={styles.submitButton} >
+            <Text style={{color: "white", fontWeight: "bold"}}>{isLogin ? "Login" : "Sign Up"}</Text>
+          </View>
+        </TouchableOpacity>
+
+       <TouchableOpacity onPress={() => {setIsLogin(!isLogin)}} style={{backgroundColor: "transparent", alignItems: "center",margin: 10}}>
+         <Text style={{margin: 10}}>{isLogin ? "Don't have an account?" : "Already have an account?"} <Text style={styles.link}>{isLogin ? "Sign Up" : "Login"}</Text>
+        </Text>
+       </TouchableOpacity>
+      
+    </View>
   );
 }
 
-
 const styles = StyleSheet.create({
-  container: {
+  containor:{
     flex: 1,
-    backgroundColor: '#0066ff',
-  },
-  headerSec:{
-    flex:1,
-    display:"flex",
-    flexDirection:"row",
-  },
-  lottieImage:{
-    width:"auto",
-    height:"auto",
-    flex:3
-  },
-  headerText:{
-    fontSize: 28,
+    justifyContent: "center",
+    
+    
+  },headerText:{
+    fontSize: 24,
     fontWeight: "bold",
-    textAlignVertical: "center",
-    textAlign: "center",
-    color:"white",
-    flex:2
+    margin: 10,
+    textAlign:"center"
+    
   },
-  bodySec:{
-    flex:2,
-    backgroundColor:"white",
-    borderTopLeftRadius:"20%",
-    borderTopRightRadius:"-20%",
-  },
-  menuContainer: {
-    backgroundColor: '#FFFFFF',
-    marginTop: 40,
-    marginHorizontal: 20,
-    borderRadius: 15,
+  textInput:{
+    borderColor: "#007bff",
+    borderWidth: 1,
+    borderRadius: 5,
     padding: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    margin: 10
   },
-  menuItem: {
-    flexDirection: 'row',
+  inputContainer: {
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-    marginBottom: 10,
-  },
-  menuItemContent: {
+    display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
   },
-  menuIcon: {
-    marginRight: 15,
+  submitButton:{
+    backgroundColor: "#007bff",
+    margin: 10,
+    borderRadius: 5,
+    width: "auto",
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  menuText: {
-    fontSize: 16,
-    color: '#1F2937',
-  },
+  link:{
+    color: "#007bff",
+    marginLeft: 10
+  }
 })
