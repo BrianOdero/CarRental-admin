@@ -15,6 +15,39 @@ export default function Index() {
 
   const router = useRouter()
 
+  const signIn = async() => {
+    setLoading(true)
+    const {error} = await supabase.auth.signInWithPassword({
+      email : email,
+      password: password
+    })
+    if(error) Alert.alert('Error signing In ',error.message)
+      setLoading(false)
+  }
+
+  const signUp = async () => {
+    setLoading(true)
+    const {
+      data: {session}, error} = await supabase.auth.signUp({
+        email:email,
+        password:password
+      })
+
+    if(error){
+      Alert.alert('Error Signing up ', error.message)
+      setLoading(false)
+    }else{
+      Alert.alert(' Sign up in progress. Please wait s we send you a confirmation email')
+      if(!session){
+        Alert.alert('Please check your email for account verification')
+        setLoading(false)
+      }
+      setLoading(false)
+    }
+    
+    
+  }
+
 
   const logInsert = async () => {
     const {data,error} = await supabase
@@ -95,8 +128,7 @@ export default function Index() {
         autoPlay 
         loop
         style={{width:"auto", height: 250, marginVertical: 5}} />
-      <Text style={styles.headerText}>{isLogin ? "LOGIN" : "SIGN UP"}</Text>
-      <Text style={{fontSize: 20,margin: 10,textAlign: "center"}}>{isLogin ? "Login to your account" : "Create a new account"}</Text>
+      <Text style={styles.headerText}>{isLogin ? "SIGN IN" : "SIGN UP FOR A NEW ACCOUNT"}</Text>
       <TextInput
         placeholder="Enter Email"
         value={email}
@@ -121,9 +153,9 @@ export default function Index() {
         />
         )}
         
-        <TouchableOpacity onPress={isLogin ? login : signup}>
+        <TouchableOpacity onPress={isLogin ? signIn : signUp}>
           <View style={styles.submitButton} >
-            <Text style={{color: "white", fontWeight: "bold"}}>{isLogin ? "Login" : "Sign Up"}</Text>
+            <Text style={{color: "white", fontWeight: "bold"}}>{isLogin ? "Sign In to Account" : "Sign Up For New Account"}</Text>
           </View>
         </TouchableOpacity>
 
